@@ -1,8 +1,8 @@
 # NvChad Official Terminal Plugin
 
-## Setup:
+## Setup
 
-### Installation:
+### Installation
 
 Simply install the plugin with packer as you would for any other:
 
@@ -15,7 +15,7 @@ use {
 }
 ```
 
-### Configuration:
+### Configuration
 Pass a table of configuration options to the plugin's `.setup()` function above.
 A sample configuration table with the default options is shown below:
 
@@ -50,7 +50,7 @@ require("nvterm").setup({
 })
 ```
 A shortcut is available for setting options of the different terminal types:
-```
+```lua
 require("nvterm").setup({
   float = {
     relative = 'editor',
@@ -67,7 +67,7 @@ require("nvterm").setup({
 
 is equivalent to:
 
-```
+```lua
 require("nvterm").setup({
   terminals = {
     type_opts = {
@@ -86,10 +86,10 @@ require("nvterm").setup({
 })
 ```
 
-### Additional Functionality:
+### Additional Functionality
 
 NvTerm provides an api for you to send commands to the terminal. You can create different ones for different filetypes like so:
-```
+```lua
 require("nvterm").setup()
 
 local terminal = require("nvterm.terminal")
