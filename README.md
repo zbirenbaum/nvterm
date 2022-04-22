@@ -49,3 +49,30 @@ require("nvterm").setup({
   }
 })
 ```
+### Additional Functionality:
+
+NvTerm provides an api for you to send commands to the terminal. You can create different ones for different filetypes like so:
+```
+require("nvterm").setup()
+
+local terminal = require("nvterm.terminal")
+
+local ft_cmds = {
+  python = "python3 " .. vim.fn.expand('%'),
+  ...
+  <your commands here>
+}
+local mappings = {
+  { 'n', '<C-l>', function () terminal.send(ft_cmds[vim.bo.filetype]) end },
+  { 'n', '<Leader>s', function () terminal.new_or_toggle('horizontal') end },
+  { 'n', '<Leader>v', function () terminal.new_or_toggle('vertical') end },
+}
+for _, mapping in ipairs(mappings) do
+  vim.keymap.set(mapping[1], mapping[2], mapping[3], opts)
+end
+```
+
+`terminal.send` also takes a 'type' parameter, so you can choose what type of terminal to send the command to.
+By default, it runs the command in the last opened terminal, or a vertical one if none exist.
+`terminal.send(ft_cmds[vim.bo.filetype], "float")` will run the command in a floating terminal
+
