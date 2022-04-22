@@ -104,6 +104,7 @@ local mappings = {
   { 'n', '<Leader>s', function () terminal.new_or_toggle('horizontal') end },
   { 'n', '<Leader>v', function () terminal.new_or_toggle('vertical') end },
 }
+local opts = { noremap = true, silent = true }
 for _, mapping in ipairs(mappings) do
   vim.keymap.set(mapping[1], mapping[2], mapping[3], opts)
 end
