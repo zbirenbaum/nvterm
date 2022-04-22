@@ -59,7 +59,7 @@ local create_mappings = function (mappings)
 end
 
 M.setup = function (config)
-  config = config and vim.tbl_deep_extend("force", config, defaults) or defaults
+  config = config and vim.tbl_deep_extend("force", defaults, config) or defaults
   set_behavior(config.behavior)
   create_mappings(config.mappings)
   terminal.init(config.terminals)
