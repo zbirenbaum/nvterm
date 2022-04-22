@@ -1,6 +1,6 @@
 local M = {}
 
-local terminal = require("chadterm.terminal")
+local terminal = require("nvterm.terminal")
 
 local defaults = {
   terminals = {
@@ -62,7 +62,7 @@ M.setup = function (config)
   config = config and vim.tbl_deep_extend("force", config, defaults) or defaults
   set_behavior(config.behavior)
   create_mappings(config.mappings)
-  require('chadterm.terminal').init(config.terminals)
+  terminal.init(config.terminals)
 end
 
 return M

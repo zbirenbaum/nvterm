@@ -8,9 +8,9 @@ Simply install the plugin with packer as you would for any other:
 
 ```
 use {
-  "NvChad/chadterm",
+  "NvChad/nvterm",
   config = function ()
-    require("chadterm").setup()
+    require("nvterm").setup()
   end,
 }
 ```
@@ -20,7 +20,7 @@ Pass a table of configuration options to the plugin's `.setup()` function above.
 A sample configuration table with the default options is shown below:
 
 ```lua
-require("chadterm").setup({
+require("nvterm").setup({
   terminals = {
     list = {},
     type_opts = {

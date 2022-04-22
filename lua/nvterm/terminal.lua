@@ -1,4 +1,4 @@
-local util = require('chadterm.termutil')
+local util = require('nvterm.termutil')
 local a = vim.api
 local nvterm = {}
 local terminals = {}
