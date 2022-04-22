@@ -49,6 +49,43 @@ require("nvterm").setup({
   }
 })
 ```
+A shortcut is available for setting options of the different terminal types:
+```
+require("nvterm").setup({
+  float = {
+    relative = 'editor',
+    row = 0.3,
+    col = 0.25,
+    width = 0.5,
+    height = 0.4,
+    border = "single",
+  },
+  horizontal = { location = "rightbelow", split_ratio = .3, },
+  vertical = { location = "rightbelow", split_ratio = .5 },
+})
+```
+
+is equivalent to:
+
+```
+require("nvterm").setup({
+  terminals = {
+    type_opts = {
+      float = {
+        relative = 'editor',
+        row = 0.3,
+        col = 0.25,
+        width = 0.5,
+        height = 0.4,
+        border = "single",
+      },
+      horizontal = { location = "rightbelow", split_ratio = .3, },
+      vertical = { location = "rightbelow", split_ratio = .5 },
+    }
+  }
+})
+```
+
 ### Additional Functionality:
 
 NvTerm provides an api for you to send commands to the terminal. You can create different ones for different filetypes like so:
