@@ -27,11 +27,11 @@ local defaults = {
       vertical = "<A-v>",
     },
     new = {
-      float = "<C-i>",
       horizontal = "<C-h>",
       vertical = "<C-v>",
     },
-  }
+  },
+  enable_new_mappings = false,
 }
 
 local set_behavior = function(behavior)
@@ -54,7 +54,7 @@ local set_behavior = function(behavior)
   end
 end
 
-M.create_mapping = function(method, map_table, opts)
+M.create_mappings = function(method, map_table, opts)
   opts = opts or {}
   vim.tbl_deep_extend("force", { noremap = true, silent = true }, opts)
   for type, mapping in pairs(map_table) do
@@ -66,20 +66,30 @@ end
 
 local setup_mappings = function (mappings)
   for method, map_table in pairs(mappings) do
-    M.create_mapping(method, map_table)
+    M.create_mappings(method, map_table)
   end
+end
+
+local map_config_shortcuts = function (config, location, shortcut)
+  for _, key in ipairs(shortcut) do
+    config[key] = config[key] or {}
+    vim.tbl_deep_extend("force", location[key], config[key])
+    config[key] = nil
+  end
+  return config
 end
 
 M.setup = function (config)
   config = config and vim.tbl_deep_extend("force", defaults, config) or defaults
-  local types = {'horizontal', 'vertical', 'float'}
-  for _, type in pairs(types) do
-    if config[type] then
-      config.terminals.type_opts[type] = vim.tbl_deep_extend("force", config.terminals.type_opts[type], config[type])
-      config[type] = nil
-    end
+  local shortcuts = {
+    { config.terminals.type_opts, { 'horizontal', 'vertical', 'float' } },
+    { config.mappings, { 'toggle', 'new' } },
+  }
+  for _, shortcut_map in ipairs(shortcuts) do
+    map_config_shortcuts(config, shortcut_map[1], shortcut_map[2])
   end
   set_behavior(config.behavior)
+  config.mappings.new = config.enable_new_mappings or nil
   setup_mappings(config.mappings)
   require("nvterm.terminal").init(config.terminals)
 end
