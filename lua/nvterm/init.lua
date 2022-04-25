@@ -70,25 +70,23 @@ local setup_mappings = function (mappings)
   end
 end
 
-local map_config_shortcuts = function (config, location, shortcut)
-  for _, key in ipairs(shortcut) do
-    config[key] = config[key] or {}
-    vim.tbl_deep_extend("force", location[key], config[key])
-    config[key] = nil
+local map_config_shortcuts = function (config)
+  local shortcuts = {
+    { config.terminals.type_opts, { 'horizontal', 'vertical', 'float' } },
+    { config.mappings, { 'toggle', 'new' } },
+  }
+  for _, shortcut_map in ipairs(shortcuts) do
+    for _, key in ipairs(shortcut_map[2]) do
+      shortcut_map[1][key] = vim.tbl_deep_extend("force", shortcut_map[1][key], config[key] or {})
+    end
   end
   return config
 end
 
 M.setup = function (config)
   config = config and vim.tbl_deep_extend("force", defaults, config) or defaults
-  local shortcuts = {
-    { config.terminals.type_opts, { 'horizontal', 'vertical', 'float' } },
-    { config.mappings, { 'toggle', 'new' } },
-  }
-  for _, shortcut_map in ipairs(shortcuts) do
-    map_config_shortcuts(config, shortcut_map[1], shortcut_map[2])
-  end
   set_behavior(config.behavior)
+  config = map_config_shortcuts(config)
   config.mappings.new = config.enable_new_mappings or nil
   setup_mappings(config.mappings)
   require("nvterm.terminal").init(config.terminals)
