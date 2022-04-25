@@ -63,7 +63,7 @@ end
 M.setup = function (config)
   config = config and vim.tbl_deep_extend("force", defaults, config) or defaults
   local types = {'horizontal', 'vertical', 'float'}
-  for _, type in ipairs(types) do
+  for _, type in pairs(types) do
     if config[type] then
       config.terminals.type_opts[type] = vim.tbl_deep_extend("force", config.terminals.type_opts[type], config[type])
       config[type] = nil
