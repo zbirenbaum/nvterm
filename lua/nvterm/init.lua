@@ -54,15 +54,20 @@ local set_behavior = function(behavior)
   end
 end
 
-local create_mappings = function (mappings)
-  local opts = { noremap = true, silent = true }
-  vim.tbl_map(function(method)
-    for type, mapping in pairs(method) do
-      vim.keymap.set({'n', 't'}, mapping, function ()
-        require("nvterm.terminal")[method](type)
-      end, opts)
-    end
-  end, mappings)
+M.create_mapping = function(method, map_table, opts)
+  opts = opts or {}
+  vim.tbl_deep_extend("force", { noremap = true, silent = true }, opts)
+  for type, mapping in pairs(map_table) do
+    vim.keymap.set({'n', 't'}, mapping, function ()
+      require('nvterm.terminal')[method](type)
+    end, opts)
+  end
+end
+
+local setup_mappings = function (mappings)
+  for method, map_table in pairs(mappings) do
+    M.create_mapping(method, map_table)
+  end
 end
 
 M.setup = function (config)
@@ -75,7 +80,7 @@ M.setup = function (config)
     end
   end
   set_behavior(config.behavior)
-  create_mappings(config.mappings)
+  setup_mappings(config.mappings)
   require("nvterm.terminal").init(config.terminals)
 end
 
