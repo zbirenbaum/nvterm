@@ -24,9 +24,9 @@ local defaults = {
   },
   mappings = {
     toggle = {
-      { '<A-i>', function () terminal.new_or_toggle('float') end },
-      { '<A-h>', function () terminal.new_or_toggle('horizontal') end },
-      { '<A-v>', function () terminal.new_or_toggle('vertical') end },
+      float = "<A-i>",
+      horizontal = "<A-h>",
+      vertical = "<A-v>",
     }
   }
 }
@@ -53,8 +53,10 @@ end
 
 local create_mappings = function (mappings)
   local opts = { noremap = true, silent = true }
-  for _, mapping in ipairs(mappings.toggle) do
-    vim.keymap.set({'n', 't'}, mapping[1], mapping[2], opts)
+  for type, mapping in ipairs(mappings.toggle) do
+    vim.keymap.set({'n', 't'}, mapping, function ()
+      terminal.new_or_toggle(type)
+    end, opts)
   end
 end
 
