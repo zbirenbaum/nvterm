@@ -1,7 +1,5 @@
 local M = {}
 
-local terminal = require("nvterm.terminal")
-
 local defaults = {
   terminals = {
     list = {},
@@ -27,7 +25,12 @@ local defaults = {
       float = "<A-i>",
       horizontal = "<A-h>",
       vertical = "<A-v>",
-    }
+    },
+    new = {
+      float = "<C-i>",
+      horizontal = "<C-h>",
+      vertical = "<C-v>",
+    },
   }
 }
 
@@ -53,11 +56,13 @@ end
 
 local create_mappings = function (mappings)
   local opts = { noremap = true, silent = true }
-  for type, mapping in ipairs(mappings.toggle) do
-    vim.keymap.set({'n', 't'}, mapping, function ()
-      terminal.new_or_toggle(type)
-    end, opts)
-  end
+  vim.tbl_map(function(method)
+    for type, mapping in pairs(method) do
+      vim.keymap.set({'n', 't'}, mapping, function ()
+        require("nvterm.terminal")[method](type)
+      end, opts)
+    end
+  end, mappings)
 end
 
 M.setup = function (config)
@@ -71,7 +76,7 @@ M.setup = function (config)
   end
   set_behavior(config.behavior)
   create_mappings(config.mappings)
-  terminal.init(config.terminals)
+  require("nvterm.terminal").init(config.terminals)
 end
 
 return M

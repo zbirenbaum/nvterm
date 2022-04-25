@@ -96,7 +96,7 @@ nvterm.new = function (type)
   return term
 end
 
-nvterm.new_or_toggle = function (type)
+nvterm.toggle = function (type)
   terminals = util.verify_terminals(terminals)
   local term = get_type_last(type)
   if not term then term = nvterm.new(type)
