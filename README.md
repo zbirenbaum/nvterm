@@ -43,7 +43,7 @@ require("nvterm").setup({
   mappings = {
     toggle = {
       { '<A-i>', function () terminal.new_or_toggle('float') end },
-      { '<A-s>', function () terminal.new_or_toggle('horizontal') end },
+      { '<A-h>', function () terminal.new_or_toggle('horizontal') end },
       { '<A-v>', function () terminal.new_or_toggle('vertical') end },
     }
   }
