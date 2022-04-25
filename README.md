@@ -45,11 +45,21 @@ require("nvterm").setup({
       float = "<A-i>",
       horizontal = "<A-h>",
       vertical = "<A-v>",
-    }
-  }
+    },
+    new = {
+      horizontal = "<C-h>",
+      vertical = "<C-v>",
+    },
+  },
+  enable_new_mappings = false,
 })
 ```
-A shortcut is available for setting options of the different terminal types:
+
+```
+By default, the mappings for creating a new terminal rather than toggling the current one are disabled.
+If `enable_new_mappings` is set to true, `new` will be set to any mappings passed in the configuration table under `new` or the defaults.
+```
+A shortcut is available for setting options of the different terminal types and mappings:
 ```lua
 require("nvterm").setup({
   float = {
@@ -62,6 +72,11 @@ require("nvterm").setup({
   },
   horizontal = { location = "rightbelow", split_ratio = .3, },
   vertical = { location = "rightbelow", split_ratio = .5 },
+  mappings{
+    toggle {
+      horizontal = "<A-s>"
+    }
+  }
 })
 ```
 
@@ -81,8 +96,11 @@ require("nvterm").setup({
       },
       horizontal = { location = "rightbelow", split_ratio = .3, },
       vertical = { location = "rightbelow", split_ratio = .5 },
-    }
-  }
+    },
+  },
+  toggle {
+    horizontal = "<A-s>",
+  },
 })
 ```
 
@@ -101,8 +119,8 @@ local ft_cmds = {
 }
 local mappings = {
   { 'n', '<C-l>', function () terminal.send(ft_cmds[vim.bo.filetype]) end },
-  { 'n', '<Leader>s', function () terminal.new_or_toggle('horizontal') end },
-  { 'n', '<Leader>v', function () terminal.new_or_toggle('vertical') end },
+  { 'n', '<Leader>s', function () terminal.toggle('horizontal') end },
+  { 'n', '<Leader>v', function () terminal.toggle('vertical') end },
 }
 local opts = { noremap = true, silent = true }
 for _, mapping in ipairs(mappings) do
