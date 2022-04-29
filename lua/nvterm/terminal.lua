@@ -10,10 +10,11 @@ local function get_last(list)
   return terminals[#terminals] or nil
 end
 
-local function get_type(type)
+local function get_type(type, list)
+  list = list or terminals.list
   return vim.tbl_filter(function(t)
     return t.type == type
-  end, terminals.list)
+  end, list)
 end
 
 local function get_still_open()
@@ -31,29 +32,11 @@ local function get_type_last(type)
 end
 
 local create_term_window = function(type)
-  util.execute_type_cmd(type, terminals)
-
+  local existing = #get_type(type, get_still_open()) > 0
+  util.execute_type_cmd(type, terminals, existing)
   vim.wo.relativenumber = false
   vim.wo.number = false
-
   return a.nvim_get_current_win()
-end
-
-local create_term = function(type)
-  local win = create_term_window(type)
-  local buf = a.nvim_create_buf(false, true)
-
-  a.nvim_buf_set_option(buf, "filetype", "terminal")
-  a.nvim_buf_set_option(buf, "buflisted", false)
-  a.nvim_win_set_buf(win, buf)
-
-  local job_id = vim.fn.termopen(vim.o.shell)
-  local term = { win = win, buf = buf, open = true, type = type, job_id = job_id }
-
-  table.insert(terminals.list, term)
-  vim.cmd("startinsert")
-
-  return term
 end
 
 local ensure_and_send = function(cmd, type)
@@ -81,20 +64,18 @@ nvterm.send = function(cmd, type)
   if not cmd then
     return
   end
-
   call_and_restore(ensure_and_send, { cmd, type })
 end
 
 nvterm.hide_term = function(term)
-  term.open = false
+  terminals.list[term.id].open = false
   a.nvim_win_close(term.win, false)
 end
 
 nvterm.show_term = function(term)
-  term.open = true
   term.win = create_term_window(term.type)
   a.nvim_win_set_buf(term.win, term.buf)
-
+  terminals.list[term.id].open = true
   vim.cmd("startinsert")
 end
 
@@ -109,7 +90,17 @@ nvterm.show = function(type)
 end
 
 nvterm.new = function(type)
-  local term = create_term(type)
+  local win = create_term_window(type)
+  local buf = a.nvim_create_buf(false, true)
+  a.nvim_buf_set_option(buf, "filetype", "terminal")
+  a.nvim_buf_set_option(buf, "buflisted", false)
+  a.nvim_win_set_buf(win, buf)
+
+  local job_id = vim.fn.termopen(vim.o.shell)
+  local id = #terminals + 1
+  local term = { id = id, win = win, buf = buf, open = true, type = type, job_id = job_id }
+  terminals.list[id] = term
+  vim.cmd("startinsert")
   return term
 end
 
