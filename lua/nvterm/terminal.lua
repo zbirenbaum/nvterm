@@ -31,6 +31,13 @@ local function get_type_last(type)
   return get_last(get_type(type))
 end
 
+local function get_term(key, value)
+  -- assumed to be unique, will only return 1 term regardless
+  return vim.tbl_filter(function(t)
+    return t[key] == value
+  end, terminals.list)[1]
+end
+
 local create_term_window = function(type)
   local existing = #get_type(type, get_still_open()) > 0
   util.execute_type_cmd(type, terminals, existing)
@@ -77,6 +84,16 @@ nvterm.show_term = function(term)
   a.nvim_win_set_buf(term.win, term.buf)
   terminals.list[term.id].open = true
   vim.cmd("startinsert")
+end
+
+nvterm.get_and_show = function(key, value)
+  term = get_term(key, value)
+  nvterm.show_term(term)
+end
+
+nvterm.get_and_hide = function(key, value)
+  term = get_term(key, value)
+  nvterm.hide_term(term)
 end
 
 nvterm.hide = function(type)
