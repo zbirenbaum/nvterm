@@ -18,9 +18,9 @@ local function get_type(type, list)
 end
 
 local function get_still_open()
-  return vim.tbl_filter(function(t)
+  return #terminals.list > 0 and vim.tbl_filter(function(t)
     return t.open == true
-  end, terminals.list)
+  end, terminals.list) or {}
 end
 
 local function get_last_still_open()
@@ -39,7 +39,7 @@ local function get_term(key, value)
 end
 
 local create_term_window = function(type)
-  local existing = #get_type(type, get_still_open()) > 0
+  local existing = terminals.list and #get_type(type, get_still_open()) > 0
   util.execute_type_cmd(type, terminals, existing)
   vim.wo.relativenumber = false
   vim.wo.number = false
@@ -87,12 +87,12 @@ nvterm.show_term = function(term)
 end
 
 nvterm.get_and_show = function(key, value)
-  term = get_term(key, value)
+  local term = get_term(key, value)
   nvterm.show_term(term)
 end
 
 nvterm.get_and_hide = function(key, value)
-  term = get_term(key, value)
+  local term = get_term(key, value)
   nvterm.hide_term(term)
 end
 
@@ -114,7 +114,7 @@ nvterm.new = function(type)
   a.nvim_win_set_buf(win, buf)
 
   local job_id = vim.fn.termopen(vim.o.shell)
-  local id = #terminals + 1
+  local id = #terminals.list + 1
   local term = { id = id, win = win, buf = buf, open = true, type = type, job_id = job_id }
   terminals.list[id] = term
   vim.cmd("startinsert")
