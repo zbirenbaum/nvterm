@@ -19,7 +19,6 @@ util.get_split_dims = function(type, ratio)
 end
 
 util.execute_type_cmd = function(type, terminals, override)
-  print(terminals.type_opts)
   local opts = terminals.type_opts[type]
   local dims = type ~= 'float' and util.get_split_dims(type, opts.split_ratio) or util.calc_float_opts(opts)
   dims = override and "" or dims
