@@ -48,12 +48,11 @@ end
 
 local ensure_and_send = function(cmd, type)
   terminals = util.verify_terminals(terminals)
-  local term = type and get_type_last(type) or get_last_still_open() or nvterm.new("vertical")
-
-  if not term then
-    term = nvterm.new("horizontal")
+  local function select_term()
+    if not type then return get_last_still_open() or nvterm.new("horizontal")
+    else return get_type_last(type) or nvterm.new(type) end
   end
-
+  local term = select_term()
   a.nvim_chan_send(term.job_id, cmd .. "\n")
 end
 
@@ -68,9 +67,7 @@ local call_and_restore = function(fn, opts)
 end
 
 nvterm.send = function(cmd, type)
-  if not cmd then
-    return
-  end
+  if not cmd then return end
   call_and_restore(ensure_and_send, { cmd, type })
 end
 
