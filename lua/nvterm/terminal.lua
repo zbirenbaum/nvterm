@@ -18,6 +18,7 @@ local function get_type(type, list)
 end
 
 local function get_still_open()
+  if not terminals.list then return {} end
   return #terminals.list > 0 and vim.tbl_filter(function(t)
     return t.open == true
   end, terminals.list) or {}
@@ -129,6 +130,26 @@ nvterm.toggle = function(type)
   else
     nvterm.show_term(term)
   end
+end
+
+nvterm.close_all_terms = function ()
+  for _, buf in ipairs(nvterm.list_active_terms("buf")) do
+    vim.cmd("bd! " .. tostring(buf))
+  end
+end
+
+nvterm.list_active_terms = function (property)
+  local terms = get_still_open()
+  if property then
+    return vim.tbl_map(function(t)
+      return t[property]
+    end, terms)
+  end
+  return terms
+end
+
+nvterm.list_terms = function ()
+  return terminals.list
 end
 
 nvterm.init = function(term_config)
