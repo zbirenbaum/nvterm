@@ -20,7 +20,7 @@ end
 
 util.execute_type_cmd = function(type, terminals, override)
   local opts = terminals.type_opts[type]
-  local dims = type ~= 'float' and util.get_split_dims(type, opts.split_ratio) or util.calc_float_opts(opts)
+  local dims = type ~= "float" and util.get_split_dims(type, opts.split_ratio) or util.calc_float_opts(opts)
   dims = override and "" or dims
   local type_cmds = {
     horizontal = function()

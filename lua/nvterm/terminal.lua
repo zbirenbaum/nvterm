@@ -1,4 +1,4 @@
-local util = require("nvterm.termutil")
+local util = require "nvterm.termutil"
 local a = vim.api
 local nvterm = {}
 local terminals = {}
@@ -18,7 +18,9 @@ local function get_type(type, list)
 end
 
 local function get_still_open()
-  if not terminals.list then return {} end
+  if not terminals.list then
+    return {}
+  end
   return #terminals.list > 0 and vim.tbl_filter(function(t)
     return t.open == true
   end, terminals.list) or {}
@@ -50,8 +52,11 @@ end
 local ensure_and_send = function(cmd, type)
   terminals = util.verify_terminals(terminals)
   local function select_term()
-    if not type then return get_last_still_open() or nvterm.new("horizontal")
-    else return get_type_last(type) or nvterm.new(type) end
+    if not type then
+      return get_last_still_open() or nvterm.new "horizontal"
+    else
+      return get_type_last(type) or nvterm.new(type)
+    end
   end
   local term = select_term()
   a.nvim_chan_send(term.job_id, cmd .. "\n")
@@ -68,7 +73,9 @@ local call_and_restore = function(fn, opts)
 end
 
 nvterm.send = function(cmd, type)
-  if not cmd then return end
+  if not cmd then
+    return
+  end
   call_and_restore(ensure_and_send, { cmd, type })
 end
 
@@ -81,7 +88,7 @@ nvterm.show_term = function(term)
   term.win = create_term_window(term.type)
   a.nvim_win_set_buf(term.win, term.buf)
   terminals.list[term.id].open = true
-  vim.cmd("startinsert")
+  vim.cmd "startinsert"
 end
 
 nvterm.get_and_show = function(key, value)
@@ -115,7 +122,7 @@ nvterm.new = function(type)
   local id = #terminals.list + 1
   local term = { id = id, win = win, buf = buf, open = true, type = type, job_id = job_id }
   terminals.list[id] = term
-  vim.cmd("startinsert")
+  vim.cmd "startinsert"
   return term
 end
 
@@ -132,13 +139,13 @@ nvterm.toggle = function(type)
   end
 end
 
-nvterm.close_all_terms = function ()
-  for _, buf in ipairs(nvterm.list_active_terms("buf")) do
+nvterm.close_all_terms = function()
+  for _, buf in ipairs(nvterm.list_active_terms "buf") do
     vim.cmd("bd! " .. tostring(buf))
   end
 end
 
-nvterm.list_active_terms = function (property)
+nvterm.list_active_terms = function(property)
   local terms = get_still_open()
   if property then
     return vim.tbl_map(function(t)
@@ -148,7 +155,7 @@ nvterm.list_active_terms = function (property)
   return terms
 end
 
-nvterm.list_terms = function ()
+nvterm.list_terms = function()
   return terminals.list
 end
 
