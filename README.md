@@ -21,6 +21,7 @@ use {
 ```lua
 require("nvterm").setup({
   terminals = {
+    shell = vim.o.shell,
     list = {},
     type_opts = {
       float = {

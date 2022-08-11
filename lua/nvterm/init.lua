@@ -2,6 +2,7 @@ local M = {}
 
 local defaults = {
   terminals = {
+    shell = vim.o.shell,
     list = {},
     type_opts = {
       float = {
