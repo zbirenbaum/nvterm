@@ -139,6 +139,19 @@ nvterm.toggle = function(type)
   end
 end
 
+nvterm.toggle_all_terms = function()
+  terminals = util.verify_terminals(terminals)
+
+  for _, term in ipairs(terminals.list) do
+    if term.open then
+      nvterm.hide_term(term)
+    else
+      nvterm.show_term(term)
+    end
+  end
+end
+
+
 nvterm.close_all_terms = function()
   for _, buf in ipairs(nvterm.list_active_terms "buf") do
     vim.cmd("bd! " .. tostring(buf))
