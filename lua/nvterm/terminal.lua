@@ -107,6 +107,7 @@ nvterm.hide = function(type)
 end
 
 nvterm.show = function(type)
+  terminals = util.verify_terminals(terminals)
   local term = type and get_type_last(type) or terminals.last
   nvterm.show_term(term)
 end
