@@ -7,7 +7,7 @@ local function get_last(list)
   if list then
     return not vim.tbl_isempty(list) and list[#list] or nil
   end
-  return terminals[#terminals] or nil
+  return terminals.list[#terminals.list] or nil
 end
 
 local function get_type(type, list)
@@ -108,7 +108,7 @@ end
 
 nvterm.show = function(type)
   terminals = util.verify_terminals(terminals)
-  local term = type and get_type_last(type) or terminals.last
+  local term = type and get_type_last(type) or get_last()
   nvterm.show_term(term)
 end
 
