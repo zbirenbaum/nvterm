@@ -12,8 +12,10 @@ local function get_last(list)
 end
 
 local function get_type(type, list)
-  terminals = util.verify_terminals(terminals)
-  list = list or terminals.list
+  if not list then
+    terminals = util.verify_terminals(terminals)
+    list = terminals.list
+  end
   return vim.tbl_filter(function(t)
     return t.type == type
   end, list)
@@ -46,8 +48,7 @@ local function get_term(key, value)
 end
 
 local create_term_window = function(type)
-  terminals = util.verify_terminals(terminals)
-  local existing = terminals.list and #get_type(type, get_still_open()) > 0
+  local existing = #get_type(type, get_still_open()) > 0
   util.execute_type_cmd(type, terminals, existing)
   vim.wo.relativenumber = false
   vim.wo.number = false
@@ -154,7 +155,6 @@ nvterm.toggle_all_terms = function()
     end
   end
 end
-
 
 nvterm.close_all_terms = function()
   for _, buf in ipairs(nvterm.list_active_terms "buf") do
