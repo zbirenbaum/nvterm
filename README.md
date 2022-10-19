@@ -105,6 +105,20 @@ require("nvterm.terminal").new "horizontal"
 require("nvterm.terminal").new "vertical"
 ```
 
+#### Send commands to the terminal
+
+```lua
+    require("nvterm.terminal").send(" your command ", "horizontal|vertical|float") -- the 2nd argument i.e direction is optional
+```
+
+- This function will first open a horizontal terminal and then run the `node test.js` command 
+- Whenever you re-run this function, it'll just run that command in that horizontal terminal.
+```lua
+function()
+      require("nvterm.terminal").send("node test.js", "horizontal")
+end,
+```
+
 ### Additional Functionality
 
 NvTerm provides an api for you to send commands to the terminal. You can create different ones for different filetypes like so:
