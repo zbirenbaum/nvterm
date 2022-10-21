@@ -7,17 +7,22 @@ local function get_last(list)
   if list then
     return not vim.tbl_isempty(list) and list[#list] or nil
   end
-  return terminals[#terminals] or nil
+  terminals = util.verify_terminals(terminals)
+  return terminals.list[#terminals.list] or nil
 end
 
 local function get_type(type, list)
-  list = list or terminals.list
+  if not list then
+    terminals = util.verify_terminals(terminals)
+    list = terminals.list
+  end
   return vim.tbl_filter(function(t)
     return t.type == type
   end, list)
 end
 
 local function get_still_open()
+  terminals = util.verify_terminals(terminals)
   if not terminals.list then
     return {}
   end
@@ -35,6 +40,7 @@ local function get_type_last(type)
 end
 
 local function get_term(key, value)
+  terminals = util.verify_terminals(terminals)
   -- assumed to be unique, will only return 1 term regardless
   return vim.tbl_filter(function(t)
     return t[key] == value
@@ -42,7 +48,7 @@ local function get_term(key, value)
 end
 
 local create_term_window = function(type)
-  local existing = terminals.list and #get_type(type, get_still_open()) > 0
+  local existing = #get_type(type, get_still_open()) > 0
   util.execute_type_cmd(type, terminals, existing)
   vim.wo.relativenumber = false
   vim.wo.number = false
@@ -50,7 +56,6 @@ local create_term_window = function(type)
 end
 
 local ensure_and_send = function(cmd, type)
-  terminals = util.verify_terminals(terminals)
   local function select_term()
     if not type then
       return get_last_still_open() or nvterm.new "horizontal"
@@ -107,8 +112,7 @@ nvterm.hide = function(type)
 end
 
 nvterm.show = function(type)
-  terminals = util.verify_terminals(terminals)
-  local term = type and get_type_last(type) or terminals.last
+  local term = type and get_type_last(type) or get_last()
   nvterm.show_term(term)
 end
 
@@ -120,6 +124,7 @@ nvterm.new = function(type)
   a.nvim_win_set_buf(win, buf)
 
   local job_id = vim.fn.termopen(terminals.shell or vim.o.shell)
+  terminals = util.verify_terminals(terminals)
   local id = #terminals.list + 1
   local term = { id = id, win = win, buf = buf, open = true, type = type, job_id = job_id }
   terminals.list[id] = term
@@ -128,7 +133,6 @@ nvterm.new = function(type)
 end
 
 nvterm.toggle = function(type)
-  terminals = util.verify_terminals(terminals)
   local term = get_type_last(type)
 
   if not term then
@@ -152,7 +156,6 @@ nvterm.toggle_all_terms = function()
   end
 end
 
-
 nvterm.close_all_terms = function()
   for _, buf in ipairs(nvterm.list_active_terms "buf") do
     vim.cmd("bd! " .. tostring(buf))
@@ -170,6 +173,7 @@ nvterm.list_active_terms = function(property)
 end
 
 nvterm.list_terms = function()
+  terminals = util.verify_terminals(terminals)
   return terminals.list
 end
 
