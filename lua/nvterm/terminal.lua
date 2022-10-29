@@ -112,14 +112,14 @@ nvterm.show = function(type)
   nvterm.show_term(term)
 end
 
-nvterm.new = function(type)
+nvterm.new = function(type, shell_override)
   local win = create_term_window(type)
   local buf = a.nvim_create_buf(false, true)
   a.nvim_buf_set_option(buf, "filetype", "terminal")
   a.nvim_buf_set_option(buf, "buflisted", false)
   a.nvim_win_set_buf(win, buf)
 
-  local job_id = vim.fn.termopen(terminals.shell or vim.o.shell)
+  local job_id = vim.fn.termopen(terminals.shell or shell_override or vim.o.shell)
   local id = #terminals.list + 1
   local term = { id = id, win = win, buf = buf, open = true, type = type, job_id = job_id }
   terminals.list[id] = term
