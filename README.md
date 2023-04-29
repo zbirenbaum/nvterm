@@ -2,10 +2,10 @@
 
 ## Install
 
-- Simply install the plugin with packer as you would for any other:
+- Simply install the plugin with lazy.nvim as you would for any other:
 
 ```lua
-use {
+{
   "NvChad/nvterm",
   config = function ()
     require("nvterm").setup()
