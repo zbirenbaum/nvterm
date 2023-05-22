@@ -59,7 +59,11 @@ local ensure_and_send = function(cmd, type)
     end
   end
   local term = select_term()
-  a.nvim_chan_send(term.job_id, cmd .. "\n")
+  if util.get_current_os() == "windows" then
+    a.nvim_chan_send(term.job_id, cmd .. "\r")
+  else
+    a.nvim_chan_send(term.job_id, cmd .. "\n")
+  end
 end
 
 local call_and_restore = function(fn, opts)
