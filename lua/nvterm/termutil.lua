@@ -1,18 +1,6 @@
 local util = {}
 local a = vim.api
 
-util.get_current_os = function ()
-  local binaryFormat = package.cpath:match("%p[\\|/]?%p(%a+)")
-  if binaryFormat == "dll" then
-    return "windows"
-  elseif binaryFormat == "so" then
-    return "linux"
-  elseif binaryFormat == "dylib" then
-    return "macos"
-  end
-  binaryFormat = nil
-end
-
 util.calc_float_opts = function(opts)
   return {
     relative = "editor",

@@ -59,7 +59,7 @@ local ensure_and_send = function(cmd, type)
     end
   end
   local term = select_term()
-  if util.get_current_os() == "windows" then
+  if vim.loop.os_uname().sysname == "Windows" then
     a.nvim_chan_send(term.job_id, cmd .. "\r")
   else
     a.nvim_chan_send(term.job_id, cmd .. "\n")
