@@ -89,17 +89,23 @@ require("nvterm").setup()
 
 local terminal = require("nvterm.terminal")
 
-local ft_cmds = {
-  python = "python3 " .. vim.fn.expand('%'),
-  ...
-  <your commands here>
-}
 local toggle_modes = {'n', 't'}
 local mappings = {
-  { 'n', '<C-l>', function () require("nvterm.terminal").send(ft_cmds[vim.bo.filetype]) end },
-  { toggle_modes, '<A-h>', function () require("nvterm.terminal").toggle('horizontal') end },
-  { toggle_modes, '<A-v>', function () require("nvterm.terminal").toggle('vertical') end },
-  { toggle_modes, '<A-i>', function () require("nvterm.terminal").toggle('float') end },
+  { 
+    'n',
+    '<C-l>', 
+    function ()
+      local ft_cmds = {
+        python = "python3 " .. vim.fn.expand('%'),
+        ...
+        <your commands here>
+      }
+      terminal.send(ft_cmds[vim.bo.filetype]) 
+    end 
+  },
+  { toggle_modes, '<A-h>', function () terminal.toggle('horizontal') end },
+  { toggle_modes, '<A-v>', function () terminal.toggle('vertical') end },
+  { toggle_modes, '<A-i>', function () terminal.toggle('float') end },
 }
 local opts = { noremap = true, silent = true }
 for _, mapping in ipairs(mappings) do
