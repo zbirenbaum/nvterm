@@ -110,3 +110,10 @@ end
 `terminal.send` also takes a 'type' parameter, so you can choose what type of terminal to send the command to.
 By default, it runs the command in the last opened terminal, or a vertical one if none exist.
 `terminal.send(ft_cmds[vim.bo.filetype], "float")` will run the command in a floating terminal
+
+## Usage
+
+### Toggle Terminal
+
+Closing the terminal buffer with `<leader> + x` _(often after using `Ctrl+x` to get into "NTERMINAL" mode)_. Then to bring the terminal back, use: `<leader> + pt`
+
