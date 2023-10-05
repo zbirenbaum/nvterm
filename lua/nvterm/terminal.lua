@@ -128,6 +128,7 @@ nvterm.new = function(type, shell_override)
 end
 
 nvterm.toggle = function(type)
+  type = type or terminals.type
   terminals = util.verify_terminals(terminals)
   local term = get_type_last(type)
 

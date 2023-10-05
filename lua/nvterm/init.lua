@@ -3,6 +3,7 @@ local M = {}
 local defaults = {
   terminals = {
     list = {},
+    type = "float",
     type_opts = {
       float = {
         relative = "editor",
