@@ -59,9 +59,11 @@ local set_behavior = function(behavior)
   end
   if behavior.close_on_exit then
     vim.api.nvim_create_autocmd({ "TermClose" }, {
-      callback = function()
-        vim.schedule_wrap(vim.api.nvim_input "<CR>")
-      end,
+      callback = vim.schedule_wrap(function()
+        local bufnr = vim.fn.bufnr("%")
+        vim.api.nvim_buf_delete(bufnr, { force = true, unload = true })
+        require("nvterm.terminal").verify_terminals()
+      end),
     })
   end
 

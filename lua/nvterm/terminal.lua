@@ -159,6 +159,10 @@ nvterm.close_all_terms = function()
   end
 end
 
+nvterm.verify_terminals = function()
+  terminals = util.verify_terminals(terminals)
+end
+
 nvterm.list_active_terms = function(property)
   local terms = get_still_open()
   if property then
