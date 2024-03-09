@@ -1,4 +1,4 @@
-# NvChad terminal Plugin
+# NvChad terminal Plugin ( Unmaintained ) 
 
 ## Install
 
@@ -110,3 +110,7 @@ end
 `terminal.send` also takes a 'type' parameter, so you can choose what type of terminal to send the command to.
 By default, it runs the command in the last opened terminal, or a vertical one if none exist.
 `terminal.send(ft_cmds[vim.bo.filetype], "float")` will run the command in a floating terminal
+
+## Credits
+
+Og Author's @zbirenbaum
