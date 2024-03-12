@@ -129,7 +129,7 @@ end
 
 nvterm.toggle = function(type)
   terminals = util.verify_terminals(terminals)
-  local term = get_type_last(type)
+  local term = get_last(get_type(type, get_still_open())) or get_type_last(type)
 
   if not term then
     term = nvterm.new(type)
@@ -151,7 +151,6 @@ nvterm.toggle_all_terms = function()
     end
   end
 end
-
 
 nvterm.close_all_terms = function()
   for _, buf in ipairs(nvterm.list_active_terms "buf") do
