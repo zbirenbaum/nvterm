@@ -72,11 +72,16 @@ local call_and_restore = function(fn, opts)
   vim.cmd(mode)
 end
 
-nvterm.send = function(cmd, type)
+nvterm.send = function(cmd, type, focus)
   if not cmd then
     return
   end
-  call_and_restore(ensure_and_send, { cmd, type })
+
+  if not focus then
+    call_and_restore(ensure_and_send, { cmd, type })
+  else
+    ensure_and_send(cmd, type)
+  end
 end
 
 nvterm.hide_term = function(term)
@@ -151,7 +156,6 @@ nvterm.toggle_all_terms = function()
     end
   end
 end
-
 
 nvterm.close_all_terms = function()
   for _, buf in ipairs(nvterm.list_active_terms "buf") do
